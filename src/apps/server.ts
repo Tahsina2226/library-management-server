@@ -1,22 +1,30 @@
-import express from "express";
-import dotenv from "dotenv";
+import mongoose from "mongoose";
+import { Server } from "http";
+import app from "./app";
 
-dotenv.config();
+const port = 5000; // hardcoded port or change as you like
+let server: Server;
 
-const app = express();
+// Hardcoded MongoDB credentials (replace with yours)
+const user = "library22";
+const pass = "library22_system";
 
-const PORT: number = Number(process.env.PORT) || 5000;
+const uri = `mongodb+srv://${encodeURIComponent(user)}:${encodeURIComponent(
+  pass
+)}@cluster0.1jen4.mongodb.net/libraryDB?retryWrites=true&w=majority&appName=Cluster0`;
 
-let server: ReturnType<typeof app.listen>;
-
-const bootstrap = async () => {
+async function main() {
   try {
-    server = app.listen(PORT, () => {
-      console.log(`library management system is running on port ${PORT}`);
+    await mongoose.connect(uri);
+    console.log("✅ Connected to MongoDB Atlas");
+
+    server = app.listen(port, () => {
+      console.log(`🚀 Server is running at http://localhost:${port}`);
     });
   } catch (error) {
-    console.error("Error starting server:", error);
+    console.error("❌ MongoDB connection failed:", error);
+    process.exit(1);
   }
-};
+}
 
-bootstrap();
+main();
