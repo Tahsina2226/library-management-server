@@ -2,10 +2,9 @@ import mongoose from "mongoose";
 import { Server } from "http";
 import app from "./app";
 
-const port = 5000; // hardcoded port or change as you like
+const port = 5000;
 let server: Server;
 
-// Hardcoded MongoDB credentials (replace with yours)
 const user = "library22";
 const pass = "library22_system";
 
@@ -19,10 +18,10 @@ async function main() {
     console.log("✅ Connected to MongoDB Atlas");
 
     server = app.listen(port, () => {
-      console.log(`🚀 Server is running at http://localhost:${port}`);
+      console.log(` library management is running at http://localhost:${port}`);
     });
   } catch (error) {
-    console.error("❌ MongoDB connection failed:", error);
+    console.error("MongoDB connection failed:", error);
     process.exit(1);
   }
 }
