@@ -2,9 +2,9 @@ import mongoose from "mongoose";
 import { Server } from "http";
 import dotenv from "dotenv";
 import path from "path";
-import app from "../apps/app";
+import app from "./app";
 
-dotenv.config({ path: path.join(__dirname, "../../.env") });
+dotenv.config({ path: path.join(__dirname, "../.env") });
 
 const port = process.env.PORT || 5000;
 let server: Server;

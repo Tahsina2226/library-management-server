@@ -35,7 +35,7 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
   }
 });
 
-// 2. Get All Books with filter/sort/limit
+// 2. Get All Books
 router.get("/", async (req: Request, res: Response): Promise<void> => {
   try {
     const filterGenre = req.query.filter as string | undefined;

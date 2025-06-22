@@ -76,7 +76,7 @@ router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
 }));
-// 2. Get All Books with filter/sort/limit
+// 2. Get All Books
 router.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const filterGenre = req.query.filter;

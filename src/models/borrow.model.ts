@@ -17,5 +17,18 @@ const BorrowSchema = new Schema<IBorrow>(
   { timestamps: true }
 );
 
+// pre-save
+BorrowSchema.pre("save", function (next) {
+  console.log(
+    `📘 About to borrow ${this.quantity} copy/copies of book ID: ${this.book}`
+  );
+  next();
+});
+
+// post-save
+BorrowSchema.post("save", function (doc) {
+  console.log(`✅ Borrowed book successfully. Borrow ID: ${doc._id}`);
+});
+
 const Borrow = mongoose.model<IBorrow>("Borrow", BorrowSchema);
 export default Borrow;
