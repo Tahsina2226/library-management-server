@@ -17,6 +17,7 @@ export interface IBook extends Document {
   description?: string;
   copies: number;
   available: boolean;
+  decreaseCopies(quantity: number): Promise<void>;
 }
 
 const BookSchema: Schema<IBook> = new Schema(
@@ -39,6 +40,19 @@ const BookSchema: Schema<IBook> = new Schema(
   },
   { timestamps: true }
 );
+
+BookSchema.methods.decreaseCopies = async function (
+  quantity: number
+): Promise<void> {
+  if (this.copies < quantity) {
+    throw new Error("Not enough copies available");
+  }
+  this.copies -= quantity;
+  if (this.copies === 0) {
+    this.available = false;
+  }
+  await this.save();
+};
 
 const Book: Model<IBook> = mongoose.model<IBook>("Book", BookSchema);
 

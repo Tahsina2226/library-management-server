@@ -1,27 +1,30 @@
 import mongoose from "mongoose";
 import { Server } from "http";
-import app from "./app";
+import dotenv from "dotenv";
+import path from "path";
+import app from "../apps/app";
 
-const port = 5000;
+dotenv.config({ path: path.join(__dirname, "../../.env") });
+
+const port = process.env.PORT || 5000;
 let server: Server;
 
-const user = "library22";
-const pass = "library22_system";
-
-const uri = `mongodb+srv://${encodeURIComponent(user)}:${encodeURIComponent(
-  pass
+const uri = `mongodb+srv://${encodeURIComponent(
+  process.env.DB_USER as string
+)}:${encodeURIComponent(
+  process.env.DB_PASS as string
 )}@cluster0.1jen4.mongodb.net/libraryDB?retryWrites=true&w=majority&appName=Cluster0`;
 
 async function main() {
   try {
     await mongoose.connect(uri);
-    console.log("✅ Connected to MongoDB Atlas");
+    console.log("Connected to MongoDB Atlas");
 
     server = app.listen(port, () => {
-      console.log(` library management is running at http://localhost:${port}`);
+      console.log(`Server is running at http://localhost:${port}`);
     });
   } catch (error) {
-    console.error("MongoDB connection failed:", error);
+    console.error("Failed to connect to MongoDB:", error);
     process.exit(1);
   }
 }
