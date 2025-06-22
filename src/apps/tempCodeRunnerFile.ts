@@ -1,12 +1,29 @@
-import express from "express";
-import cors from "cors";
-import bookRoutes from "../routes/bookroutes";
+import mongoose from "mongoose";
+import { Server } from "http";
+import app from "./app";
 
-const app = express();
+const port = 5000;
+let server: Server;
 
-app.use(cors());
-app.use(express.json());
+const user = "library22";
+const pass = "library22_system";
 
-app.use("/api/books", bookRoutes);
+const uri = `mongodb+srv://${encodeURIComponent(user)}:${encodeURIComponent(
+  pass
+)}@cluster0.1jen4.mongodb.net/libraryDB?retryWrites=true&w=majority&appName=Cluster0`;
 
-export default app;
+async function main() {
+  try {
+    await mongoose.connect(uri);
+    console.log("✅ Connected to MongoDB Atlas");
+
+    server = app.listen(port, () => {
+      console.log(` library management is running at http://localhost:${port}`);
+    });
+  } catch (error) {
+    console.error("MongoDB connection failed:", error);
+    process.exit(1);
+  }
+}
+
+main();
