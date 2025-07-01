@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Types } from "mongoose";
+import mongoose, { Document, Schema, Types } from "mongoose";
 
 export interface IBorrow extends Document {
   book: Types.ObjectId;
@@ -17,7 +17,6 @@ const BorrowSchema = new Schema<IBorrow>(
   { timestamps: true }
 );
 
-// pre-save
 BorrowSchema.pre("save", function (next) {
   console.log(
     `📘 About to borrow ${this.quantity} copy/copies of book ID: ${this.book}`
@@ -25,7 +24,6 @@ BorrowSchema.pre("save", function (next) {
   next();
 });
 
-// post-save
 BorrowSchema.post("save", function (doc) {
   console.log(`✅ Borrowed book successfully. Borrow ID: ${doc._id}`);
 });
