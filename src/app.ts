@@ -5,7 +5,29 @@ import borrowRoutes from "./routes/borrow.routes";
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = [
+  "https://library-management-projects.vercel.app",
+  "https://librarymanagement-gilt.vercel.app",
+  "https://library-management-system-delta-nine.vercel.app",
+];
+
+const corsOptions = {
+  origin: function (
+    origin: string | undefined,
+    callback: (err: Error | null, allow?: boolean) => void
+  ) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.get("/", (req, res) => {

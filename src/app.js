@@ -8,20 +8,8 @@ const cors_1 = __importDefault(require("cors"));
 const bookroutes_1 = __importDefault(require("./routes/bookroutes"));
 const borrow_routes_1 = __importDefault(require("./routes/borrow.routes"));
 const app = (0, express_1.default)();
-const allowedOrigins = [
-    "https://library-management-projects.vercel.app",
-    "https://librarymanagement-gilt.vercel.app",
-    "https://library-management-system-delta-nine.vercel.app",
-];
 const corsOptions = {
-    origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        }
-        else {
-            callback(new Error("Not allowed by CORS"));
-        }
-    },
+    origin: "https://librarymanagement-gilt.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,

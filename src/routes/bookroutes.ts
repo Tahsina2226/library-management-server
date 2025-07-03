@@ -9,6 +9,9 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
     const { title, author, genre, isbn, description, copies, available } =
       req.body;
 
+    // copies 0 হলে available false সেট করব
+    const isAvailable = copies > 0 ? available ?? true : false;
+
     const book = new Book({
       title,
       author,
@@ -16,7 +19,7 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
       isbn,
       description,
       copies,
-      available,
+      available: isAvailable,
     });
 
     await book.save();
@@ -35,13 +38,16 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
   }
 });
 
-// 2. Get All Books
+// 2. Get All Books with pagination
 router.get("/", async (req: Request, res: Response): Promise<void> => {
   try {
     const filterGenre = req.query.filter as string | undefined;
     const sortBy = (req.query.sortBy as string) || "createdAt";
     const sortOrder = (req.query.sort as string) === "desc" ? -1 : 1;
+
     const limit = parseInt(req.query.limit as string) || 10;
+    const page = parseInt(req.query.page as string) || 1;
+    const skip = (page - 1) * limit;
 
     const filter: any = {};
     if (filterGenre && Object.values(Genre).includes(filterGenre as Genre)) {
@@ -50,12 +56,22 @@ router.get("/", async (req: Request, res: Response): Promise<void> => {
 
     const books = await Book.find(filter)
       .sort({ [sortBy]: sortOrder })
+      .skip(skip)
       .limit(limit);
+
+    // মোট বইয়ের সংখ্যা (pagination এর জন্য)
+    const totalBooks = await Book.countDocuments(filter);
 
     res.json({
       success: true,
       message: "Books retrieved successfully",
       data: books,
+      pagination: {
+        total: totalBooks,
+        page,
+        limit,
+        totalPages: Math.ceil(totalBooks / limit),
+      },
     });
   } catch (error) {
     res.status(500).json({
@@ -99,6 +115,11 @@ router.put("/:bookId", async (req: Request, res: Response): Promise<void> => {
   try {
     const { bookId } = req.params;
     const updateData = req.body;
+
+    // যদি copies update করা হয়, তাহলে available সেট করো
+    if ("copies" in updateData) {
+      updateData.available = updateData.copies > 0;
+    }
 
     const updatedBook = await Book.findByIdAndUpdate(bookId, updateData, {
       new: true,

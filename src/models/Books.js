@@ -42,11 +42,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Genre = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
+var Genre;
+(function (Genre) {
+    Genre["FICTION"] = "FICTION";
+    Genre["NON_FICTION"] = "NON_FICTION";
+    Genre["SCIENCE"] = "SCIENCE";
+    Genre["HISTORY"] = "HISTORY";
+    Genre["BIOGRAPHY"] = "BIOGRAPHY";
+    Genre["FANTASY"] = "FANTASY";
+})(Genre || (exports.Genre = Genre = {}));
 const BookSchema = new mongoose_1.Schema({
     title: { type: String, required: [true, "Title is required"] },
     author: { type: String, required: [true, "Author is required"] },
-    genre: { type: String, required: [true, "Genre is required"] },
+    genre: {
+        type: String,
+        enum: Object.values(Genre),
+        required: [true, "Genre is required"],
+    },
     isbn: { type: String, required: [true, "ISBN is required"], unique: true },
     description: { type: String },
     copies: {
