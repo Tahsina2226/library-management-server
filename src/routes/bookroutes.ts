@@ -9,7 +9,6 @@ router.post("/", async (req: Request, res: Response): Promise<void> => {
     const { title, author, genre, isbn, description, copies, available } =
       req.body;
 
-    // copies 0 হলে available false সেট করব
     const isAvailable = copies > 0 ? available ?? true : false;
 
     const book = new Book({
@@ -59,7 +58,6 @@ router.get("/", async (req: Request, res: Response): Promise<void> => {
       .skip(skip)
       .limit(limit);
 
-    // মোট বইয়ের সংখ্যা (pagination এর জন্য)
     const totalBooks = await Book.countDocuments(filter);
 
     res.json({
@@ -116,7 +114,6 @@ router.put("/:bookId", async (req: Request, res: Response): Promise<void> => {
     const { bookId } = req.params;
     const updateData = req.body;
 
-    // যদি copies update করা হয়, তাহলে available সেট করো
     if ("copies" in updateData) {
       updateData.available = updateData.copies > 0;
     }
